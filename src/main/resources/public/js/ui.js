@@ -3,4 +3,3 @@ class Ui {
 
     }
 }
-export { Ui };

@@ -3,4 +3,3 @@ class Router {
 
     }
 }
-export { Router }

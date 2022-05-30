@@ -1,4 +1,3 @@
-import * as THREE from './libs/three.module.js'
 class Mapa extends THREE.Mesh {
     constructor(width, height, texture) {
         super();
@@ -17,7 +16,7 @@ class Mapa extends THREE.Mesh {
         return cube;
     }
     createPlansza = () => {
-        const geometry = new THREE.BoxGeometry(this.width + 200, 9, this.height + 200);
+        const geometry = new THREE.BoxGeometry(this.width + 400, 8, this.height + 200);
         const material = new THREE.MeshBasicMaterial({
             color: 0xffffff,
             side: THREE.DoubleSide,
@@ -27,4 +26,3 @@ class Mapa extends THREE.Mesh {
         return cube;
     }
 }
-export { Mapa };
