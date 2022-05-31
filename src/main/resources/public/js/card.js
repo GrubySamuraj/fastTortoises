@@ -1,9 +1,11 @@
 class Card extends THREE.Mesh {
     constructor(id, texture, kolor, typ) {
+        super();
         this._id = id;
         this.texture = texture;
         this.kolor = kolor;
         this.typ = typ;
+        this.rewers = "./img/textures/rewersDuzy.png"
     }
     createCard = () => {
         const geometry = new THREE.BoxGeometry(57, 1, 86);

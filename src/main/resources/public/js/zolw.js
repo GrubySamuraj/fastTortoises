@@ -9,7 +9,6 @@ class Zolw extends THREE.Mesh {
         this.positionz = positionz;
     }
     createZolw = () => {
-        let example;
         const loader = new THREE.GLTFLoader();
         loader.load('./img/textures/zolwie/' + this.tekstura, (gltf) => {
             gltf.scene.scale.set(12, 12, 12);
@@ -20,8 +19,5 @@ class Zolw extends THREE.Mesh {
         }, undefined, function (error) {
             console.error(error);
         });
-        // const geometry = new THREE.BoxGeometry(70, 10, 70);
-        // const cube = new THREE.Mesh(geometry, material);
-        // return cube;
     }
 }
