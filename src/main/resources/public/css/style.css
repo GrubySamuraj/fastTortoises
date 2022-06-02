@@ -5,6 +5,65 @@ body {
     font-size: 20px;
 }
 
+
 #root {
     height: 100%
+}
+
+#menu {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: red 2px solid;
+    border-radius: 10px;
+    padding: 100px;
+    color: black;
+    /* background-color: #56D62B; */
+    background-image: url("../img/pedzace-zolwie-gra.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover
+}
+
+input {
+    width: 200px;
+    height: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: none;
+    margin: 20px;
+    /* position: relative; */
+}
+
+#logins {
+    color: white;
+    position: relative;
+    top: 40%;
+    left: 50%;
+    transform: translate(-30%, -50%);
+    box-sizing: border-box;
+}
+
+button {
+    margin: 20px;
+    position: relative;
+    display: inline-block;
+    background-color: yellowgreen;
+    left: 50%;
+    width: 200px;
+    height: 40px;
+    transform: translate(-90%);
+    box-sizing: border-box;
+    text-decoration: none;
+    border-radius: 20px;
+    border: none;
+}
+
+button:hover {
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
 }

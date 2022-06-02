@@ -3,18 +3,19 @@ class Game extends THREE.Mesh {
         super();
         this.pola = [[], [], [], [], [], [], [], [], [], []];
         this.kartyZolw = [];
+        this.kartyAkcji = [];
         this.zolwie = [];
+        this.positionPole = [{ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 0 }];
         this.kolory = ["czerwony", "fioletowy", "niebieski", "zielony", "zolty"];
         this.texturesCardsMaly = ["zolwczerwonyKartka.png", "zolwFioletowyKartka.png", "zolwniebieskiKartka.png", "zolwZielonyKartka.png", "zolwZoltyKartka.png"];
         this.teksturazolwia = ["zolwNiebieski.gltf", "zolwCzerwony.gltf", "zolwFioletowy.gltf", "zolwZielony.gltf", "zolwZolty.gltf"];
+        this.teksturyKart = ["CzerwonyMinus.png", "CzerwonyPlus.png", "CzerwonyPlusPlus.png", "FioletowyMinus.png", "FioletowyPlus.png", "FioletowyPlusPlus.png", "FioletowyStaryStary.png", "KolorowyMinus.png", "KolorowyPlecy.png", "KolorowyPlus.png", "NiebieskiMinus.png", "NiebieskiPlus.png", "NiebieskiPlusPlus.png", "ZielonyMinus.png", "ZielonyPlus.png", "ZielonyPlusPlus.png", "ZoltyMinus.png", "ZoltyPlus.png", "ZoltyPlusPlus.png"];
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        // player.perspective = 0;
         document.getElementById("root").append(this.renderer.domElement);
         this.camera.position.set(0, 600, 1000);
-        this.createElements();
         this.axes = new THREE.AxesHelper(1000);
         this.scene.add(this.axes);
         this.camera.lookAt(this.scene.position);
@@ -38,6 +39,7 @@ class Game extends THREE.Mesh {
         this.renderer.render(this.scene, this.camera);
     }
     createElements = async () => {
+        this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
         let posx = -200;
         let zolw;
         for (let x = 0; x < 5; x++) {
@@ -50,15 +52,29 @@ class Game extends THREE.Mesh {
         let posy = 10;
         let posz = 430;
         for (let x = 0; x < 6; x++) {
-            posy += 2
+            posy += 1
             let zolwcard;
-            zolwcard = new Smallcard(0, this.texturesCardsMaly[x], this.kolory[x], "zolw", posx, posy, posz);
+            zolwcard = new Smallcard(x, this.texturesCardsMaly[x], this.kolory[x], "zolw", posx, posy, posz);
             zolwcard = zolwcard.createCard();
             this.scene.add(zolwcard);
             // zolwcard.rotation.y = Math.PI;
             zolwcard.rotation.z = Math.PI;
             this.kartyZolw.push(zolwcard);
         }
+        posx = -350;
+        posy = 10;
+        posz = 0;
+        for (let y = 0; y < this.teksturyKart.length; y++) {
+            posy += 1
+            let karta;
+            // constructor(id, texture, typ, posx, posy, posz)
+            karta = new Card(y, this.teksturyKart[y], "karta", posx, posy, posz);
+            karta = karta.createCard();
+            // zolwcard.rotation.y = Math.PI;
+            karta.rotation.z = Math.PI;
+            this.kartyAkcji.push(karta);
+        }
+        this.potasuj(this.kartyAkcji, 10);
         this.potasuj(this.kartyZolw, 10);
     }
     potasuj = (karty, iloscPrzetasowan) => {
@@ -86,12 +102,15 @@ class Game extends THREE.Mesh {
                 .interpolation(TWEEN.Interpolation.Bezier)
                 .onUpdate()
                 .onComplete(() => {
-                    for (let y = karty.length - 1; y > losowa; y--) {
-                        karty[y].position.y = karty[y - 1].position.y;
-                        karty[y] = karty[y - 1];
+                    // karty[karty.length - 1] = karty[losowa];
+                    // for (let y = karty.length - 1; y > 0; y--) {
+                    //     karty[y].position.y = karty[y - 1].position.y;
+                    //     // karty[y] = karty[y - 1];
+                    // }
+                    for (let x = 0; x < karty.length - 1; x++) {
+                        karty[x].position.y = x
                     }
-                    karty[karty.length - 1] = karty[losowa];
-                    karty[karty.length - 1].position.y = karty[losowa].position.y;
+                    karty[karty.length - 1].position.y = karty.length - 1
                     this.potasuj(karty, iloscPrzetasowan - 1);
                 })
                 .easing(TWEEN.Easing.Linear.None)
@@ -103,7 +122,9 @@ class Game extends THREE.Mesh {
         }
     }
     rozdanie = () => {
+        console.log(this.kartyZolw.length - 1);
         let losowa = Math.floor(Math.random() * (this.kartyZolw.length - 1));
+        console.log(losowa);
         let karta = this.kartyZolw[losowa];
         karta.rotation.x = Math.PI;
         karta.rotation.y = Math.PI;

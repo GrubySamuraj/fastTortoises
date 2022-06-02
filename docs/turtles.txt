@@ -1,0 +1,76 @@
+//USERS:
+
+POST /user/register 
+req{
+	email
+	password
+}
+res{
+	status: boolean //czy udało się zarejestrować
+	message: string //informacja do wyświetlenia czemu rejestaracja nie przeszła
+}
+
+POST /user/login 
+req{
+	email: string
+	password: string
+}
+res{
+	status: boolean //czy udało się zalogować
+	message: string //informacja do wyświetlenia czemu logowanie nie przeszło
+	userId: int
+	jwt: string
+}
+
+GET /user
+res{
+	users: array
+}
+
+//MOVES
+
+POST /move (losowanie koloru)
+req{
+	playerId: int
+}
+res{
+	color: string //kolor karty ("RED", "BLUE", "GREEN", "PURPLE", "YELLOW", "ORANGE", "ALL")
+}
+
+UPDATE /move (rzucanie karty)
+req {
+	color: string //kolor karty ("RED", "BLUE", "GREEN", "PURPLE", "YELLOW", "ORANGE", "ALL")
+	type: string //( "+", "-", "++", ">" )
+}
+res {
+	color: string //kolor karty ("RED", "BLUE", "GREEN", "PURPLE", "YELLOW", "ORANGE", "ALL")
+	type: string //( "+", "-", "++", ">" )
+	//nowa dobrana karta
+}
+
+GET /move(co sekundę)
+res {
+	change: boolean //czy ktoś się ruszył
+	turn: int //id gracza wykonującego ruch
+	board: {
+		field1: [
+				Turtle: {color: string, position: int},
+				Turtle: {color: string, position: int}
+		],
+		field2,
+		field3,
+		field4,
+		field5,
+		field6,
+		field7,
+		field8
+		}
+	finishers: array [
+		turtle: {
+			color: string
+			playerId: int/null //w zależności czy do koloru żółwia był przypisany gracz
+		}
+	]
+}
+//board: każde pole jest arrayem, w którym znajdują się obiekty (żółwie), które posiadają kolor i zapisaną pozycję jak wysoko na stosie się znajdują (0 to najniżej)
+

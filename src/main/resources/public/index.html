@@ -9,6 +9,7 @@
     <script src="https://threejs.org/build/three.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
     <script src="./js/libs/tween.umd.js"></script>
+    <script src="./js/libs/OrbitControls.js"></script>
     <script src="./js/router.js" defer></script>
     <script src="./js/player.js" defer></script>
     <script src="./js/ui.js" defer></script>
@@ -21,6 +22,14 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+    <div id="menu">
+        <div id="logins">
+            Login:<input type="text" id="login"><br>
+            Haslo:<input type="password" id="password"><br>
+            <button id="loginbtn" onclick="router.login()">Zaloguj</button><br>
+            <a href="#" id="rejestracja">Nie masz konta? Zarejestruj się tutaj</a>
+        </div>
+    </div>
     <div id="root"></div>
 </body>
 </html>
