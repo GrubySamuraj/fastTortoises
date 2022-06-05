@@ -7,7 +7,7 @@ class Wybor extends THREE.Mesh {
         this.colors = colors;
         this.wszystkieWybory = [];
     }
-    createWybor = () => {
+    createWybor = async () => {
         let wybory = new THREE.Object3D();
         const bialyGeometry = new THREE.PlaneGeometry(135, 30);
         const bialyMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });

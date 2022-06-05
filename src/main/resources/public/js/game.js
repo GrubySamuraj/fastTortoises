@@ -43,6 +43,7 @@ class Game extends THREE.Mesh {
                 tortoises: []
             }
         ];
+        this.kolorowaClicked = false;
         this.kartyZolw = [];
         this.kartyAkcji = [];
         this.zolwie = [];
@@ -52,6 +53,11 @@ class Game extends THREE.Mesh {
         this.texturesCardsMaly = ["zolwczerwonyKartka.png", "zolwFioletowyKartka.png", "zolwniebieskiKartka.png", "zolwZielonyKartka.png", "zolwZoltyKartka.png"];
         this.teksturazolwia = ["zolwNiebieski.gltf", "zolwCzerwony.gltf", "zolwFioletowy.gltf", "zolwZielony.gltf", "zolwZolty.gltf"];
         this.teksturyKart = ["CzerwonyMinus.png", "CzerwonyPlus.png", "CzerwonyPlusPlus.png", "FioletowyMinus.png", "FioletowyPlus.png", "FioletowyPlusPlus.png", "KolorowyStaryStary.png", "KolorowyMinus.png", "KolorowyPlecy.png", "KolorowyPlus.png", "NiebieskiMinus.png", "NiebieskiPlus.png", "NiebieskiPlusPlus.png", "ZielonyMinus.png", "ZielonyPlus.png", "ZielonyPlusPlus.png", "ZoltyMinus.png", "ZoltyPlus.png", "ZoltyPlusPlus.png"];
+        let ilosciKart = {
+            plus: 5,
+            minus: 2,
+            plusplus: 1
+        }
         this.kartyInfo = [];
         for (let x = 0; x < this.teksturyKart.length; x++) {
             let obj = {};
@@ -296,21 +302,21 @@ class Game extends THREE.Mesh {
                 console.log("Koniec gry");
             }
             else if (zolw.pole + karta.typ.znak >= 0) {
-                if (!this.pola[zolw.pole] || this.pola[zolw.pole].tortoises.length == 1 || (this.pola[zolw.pole].tortoises.length > 1 && this.pola[zolw.pole].tortoises.indexOf(zolw) == this.pola[zolw.pole].tortoises.length - 1)) {
+                if (!this.pola[zolw.pole] || this.pola[zolw.pole].tortoises.length == 1 || (this.pola[zolw.pole].tortoises.length > 1 && this.pola[zolw.pole].tortoises.indexOf(zolw) == this.pola[zolw.pole].tortoises.length - 1) || karta.typ.onlyOne) {
                     await this.WyrzucenieKarty(karta);
                     this.JedenZolw(zolw, karta);
                 }
                 else {
+                    await this.WyrzucenieKarty(karta);
                     this.WieleZolwi(zolw, karta);
                 }
             }
         }
         else {
-            let wybory = new Wybor(karta.position.x, karta.position.y + 60, karta.position.z, this.colors);
-            wybory = wybory.createWybor();
-            this.scene.add(wybory);
-            console.log("Kolorowo");
             console.log(karta.typ);
+            let wybory = new Wybor(karta.position.x, karta.position.y + 60, karta.position.z, this.colors);
+            wybory = await wybory.createWybor();
+            this.scene.add(wybory);
         }
     }
     JedenZolw = (zolw, karta) => {
@@ -323,15 +329,20 @@ class Game extends THREE.Mesh {
         zolw.position.y = 10 + (this.pola[zolw.pole].tortoises.length - 1) * 10;
         zolw.position.z = this.pola[zolw.pole].position.z;
     }
-    WieleZolwi = (zolw, karta) => { //naprawic, cos sie psuje
+    WieleZolwi = (zolw, karta) => { //naprawic, gdy wskakuje kilka żółwi to sie psuje
         let transport = [];
         let przed = zolw.pole;
         for (let x = this.pola[zolw.pole].tortoises.indexOf(zolw); x < this.pola[zolw.pole].tortoises.length; x++) {
             transport.push(this.pola[przed].tortoises[x]);
             this.pola[zolw.pole].tortoises[x].position.x = this.pola[zolw.pole + karta.typ.znak].position.x;
-            this.pola[zolw.pole].tortoises[x].position.y = 10 + (x * 10);
+            console.log(this.pola[zolw.pole + karta.typ.znak].tortoises.length);
+            if (this.pola[zolw.pole + karta.typ.znak].tortoises.length != 0)
+                this.pola[zolw.pole].tortoises[x].position.y = 10 + (this.pola[zolw.pole + karta.typ.znak].tortoises.length * 10) + (x * 10);
+            else
+                this.pola[zolw.pole].tortoises[x].position.y = 10 + (x * 10);
             this.pola[zolw.pole].tortoises[x].position.z = this.pola[zolw.pole + karta.typ.znak].position.z;
         }
+        console.log(transport);
         for (let x = 0; x < transport.length; x++) {
             let zolw = transport[x];
             if (this.pola[zolw.pole])
@@ -370,12 +381,20 @@ class Game extends THREE.Mesh {
             }
         })
     }
-    WyborKoloruKarty = async (obj) => {
+    WyborKoloruKarty = async (obj) => { // dodac kolorowa clicked i uniemozliwic dodac kolorowa clicked i uniemozliwic klikanie innych kart
         this.karta.typ.kolor = obj.kolor;
         for (let x = 0; x < this.wszystkieWybory.length; x++) {
-            console.log(this.wszystkieWybory[x]);
             this.scene.remove(this.wszystkieWybory[x]);
         }
+        if (this.karta.typ.znak == "starystary") {
+            this.karta.typ.znak = 2;
+            this.karta.typ.onlyOne = true;
+        }
+        else if (this.karta.typ.znak == "stary") {
+            this.karta.typ.znak = 1;
+            this.karta.typ.onlyOne = true;
+        }
+        console.log(this.karta);
         await this.RzutKarty(this.karta);
     }
 }
