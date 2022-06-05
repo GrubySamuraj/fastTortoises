@@ -8,6 +8,7 @@ class Router {
         let json = await this.fetchPostAsync(login, haslo);
         await ui.usunOkienko();
         game.createElements();
+        game.myRaycast();
         console.log(json);
     }
     register = async () => {
@@ -32,6 +33,7 @@ class Router {
                     resolve(response.status)
                 else {
                     await ui.usunOkienko();
+                    game.myRaycast();
                     game.createElements();
                     resolve(await response.json());
                 }

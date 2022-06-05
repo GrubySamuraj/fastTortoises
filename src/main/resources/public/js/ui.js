@@ -7,7 +7,6 @@ class Ui {
             try {
                 let div = document.getElementById("menu");
                 div.remove();
-                console.log("dupsztal");
                 resolve("aaa");
             }
             catch (err) {

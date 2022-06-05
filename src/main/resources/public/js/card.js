@@ -1,9 +1,9 @@
 class Card extends THREE.Mesh {
-    constructor(id, texture, typ, posx, posy, posz) {
+    constructor(id, texture, typ, posx, posy, posz, kolor) {
         super();
         this._id = id;
         this.texture = texture;
-        // this.kolor = kolor;
+        this.kolor = kolor;
         this.typ = typ;
         this.posx = posx;
         this.posy = posy;
@@ -11,7 +11,6 @@ class Card extends THREE.Mesh {
         this.rewers = "./img/textures/karty/Rewers.png";
     }
     createCard = () => {
-        //obiekt stworzyć, przechowujący karty
         const geometry = new THREE.BoxGeometry(57, 1, 86);
         let materials = [];
         materials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, map: new THREE.TextureLoader().load("./img/textures/karty/Rewers.png") }));
@@ -22,8 +21,8 @@ class Card extends THREE.Mesh {
         materials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, map: new THREE.TextureLoader().load("./img/textures/karty/Rewers.png") }));
         materials.push(new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, map: new THREE.TextureLoader().load("./img/textures/karty/Rewers.png") }));
         const cube = new THREE.Mesh(geometry, materials);
-        game.scene.add(cube);
         cube.position.set(this.posx, this.posy, this.posz);
+        cube.typ = this.typ;
         return cube;
     }
 }
