@@ -53,50 +53,18 @@ class Game extends THREE.Mesh {
         this.texturesCardsMaly = ["zolwczerwonyKartka.png", "zolwFioletowyKartka.png", "zolwniebieskiKartka.png", "zolwZielonyKartka.png", "zolwZoltyKartka.png"];
         this.teksturazolwia = ["zolwNiebieski.gltf", "zolwCzerwony.gltf", "zolwFioletowy.gltf", "zolwZielony.gltf", "zolwZolty.gltf"];
         this.teksturyKart = ["CzerwonyMinus.png", "CzerwonyPlus.png", "CzerwonyPlusPlus.png", "FioletowyMinus.png", "FioletowyPlus.png", "FioletowyPlusPlus.png", "KolorowyStaryStary.png", "KolorowyMinus.png", "KolorowyPlecy.png", "KolorowyPlus.png", "NiebieskiMinus.png", "NiebieskiPlus.png", "NiebieskiPlusPlus.png", "ZielonyMinus.png", "ZielonyPlus.png", "ZielonyPlusPlus.png", "ZoltyMinus.png", "ZoltyPlus.png", "ZoltyPlusPlus.png"];
-        let ilosciKart = {
+        this.kolorkiClicked = false;
+        this.carsdPosition = { x: 0, y: 600, z: 1000 };
+        this.ilosciKart = {
             plus: 5,
             minus: 2,
-            plusplus: 1
-        }
+            plusplus: 1,
+            kolorowy: 3,
+            stary: 2,
+            starystary: 2
+        };
         this.kartyInfo = [];
-        for (let x = 0; x < this.teksturyKart.length; x++) {
-            let obj = {};
-            if (this.teksturyKart[x].search(/.*Niebieski.*/) != -1) {
-                obj.kolor = "niebieski";
-            }
-            else if (this.teksturyKart[x].search(/.*Czerwony.*/) != -1) {
-                obj.kolor = "czerwony";
-            }
-            else if (this.teksturyKart[x].search(/.*Fioletowy.*/) != -1) {
-                obj.kolor = "fioletowy";
-            }
-            else if (this.teksturyKart[x].search(/.*Zolty.*/) != -1) {
-                obj.kolor = "zolty";
-            }
-            else if (this.teksturyKart[x].search(/.*Zielony.*/) != -1) {
-                obj.kolor = "zielony";
-            }
-            else {
-                obj.kolor = "kolorowy";
-            }
-            if (this.teksturyKart[x].search(/.*PlusPlus.*/) != -1) {
-                obj.znak = 2;
-            }
-            else if (this.teksturyKart[x].search(/.*Plus.*/) != -1) {
-                obj.znak = 1;
-            }
-            else if (this.teksturyKart[x].search(/.*Minus.*/) != -1) {
-                obj.znak = -1;
-            }
-            else if (this.teksturyKart[x].search(/.*StaryStary.*/) != -1) {
-                obj.znak = "starystary";
-            }
-            else {
-                obj.znak = "stary";
-            }
-            obj.sciezka = this.teksturyKart[x];
-            this.kartyInfo.push(obj);
-        }
+        this.GeneracjaKart();
         console.log(this.kartyInfo);
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -133,8 +101,6 @@ class Game extends THREE.Mesh {
         let posx = -200;
         let zolw;
         for (let x = 0; x < 5; x++) {
-            console.log(this.teksturazolwia[x]);
-            console.log(this.kolory[x]);
             zolw = new Zolw(this.teksturazolwia[x], x, 0, posx, -6, 450, this.kolory[x]);
             zolw = await zolw.createZolw();
             posx += 100;
@@ -247,7 +213,7 @@ class Game extends THREE.Mesh {
                     console.log(obj);
                     this.WybranieKart(this.kartyAkcji);
                 }
-                else if (obj.player) {
+                else if (obj.player && !this.kolorkiClicked) {
                     this.karta = obj;
                     this.RzutKarty(obj);
                 }
@@ -273,7 +239,7 @@ class Game extends THREE.Mesh {
                 let losowa = Math.floor(Math.random() * (karty.length - 1));
                 console.log(karty[losowa]);
                 new TWEEN.Tween(karty[losowa].position)
-                    .to({ x: this.camera.position.x + posx, y: this.camera.position.y - 220, z: this.camera.position.z - 200 }, 1000)
+                    .to({ x: this.carsdPosition.x + posx, y: this.carsdPosition.y - 220, z: this.carsdPosition.z - 200 }, 1000)
                     .easing(TWEEN.Easing.Linear.None)
                     .onComplete(() => {
                         this.zrzucenieKart(this.kartyZolw);
@@ -313,7 +279,7 @@ class Game extends THREE.Mesh {
             }
         }
         else {
-            console.log(karta.typ);
+            this.kolorkiClicked = true;
             let wybory = new Wybor(karta.position.x, karta.position.y + 60, karta.position.z, this.colors);
             wybory = await wybory.createWybor();
             this.scene.add(wybory);
@@ -321,6 +287,9 @@ class Game extends THREE.Mesh {
     }
     JedenZolw = (zolw, karta) => {
         console.log(this.pola[zolw.pole]);
+        if (karta.typ.onlyOne) {
+            this.zrzucenieZolwiow(this.pola[zolw.pole].tortoises, this.pola[zolw.pole].tortoises.indexOf(zolw));
+        }
         if (this.pola[zolw.pole])
             this.pola[zolw.pole].tortoises.splice(this.pola[zolw.pole].tortoises.indexOf(zolw), 1);
         zolw.pole += karta.typ.znak;
@@ -329,7 +298,7 @@ class Game extends THREE.Mesh {
         zolw.position.y = 10 + (this.pola[zolw.pole].tortoises.length - 1) * 10;
         zolw.position.z = this.pola[zolw.pole].position.z;
     }
-    WieleZolwi = (zolw, karta) => { //naprawic, gdy wskakuje kilka żółwi to sie psuje
+    WieleZolwi = (zolw, karta) => {
         let transport = [];
         let przed = zolw.pole;
         for (let x = this.pola[zolw.pole].tortoises.indexOf(zolw); x < this.pola[zolw.pole].tortoises.length; x++) {
@@ -338,8 +307,9 @@ class Game extends THREE.Mesh {
             console.log(this.pola[zolw.pole + karta.typ.znak].tortoises.length);
             if (this.pola[zolw.pole + karta.typ.znak].tortoises.length != 0)
                 this.pola[zolw.pole].tortoises[x].position.y = 10 + (this.pola[zolw.pole + karta.typ.znak].tortoises.length * 10) + (x * 10);
-            else
-                this.pola[zolw.pole].tortoises[x].position.y = 10 + (x * 10);
+            else {
+                this.pola[zolw.pole].tortoises[x].position.y = 10 + (transport.indexOf(this.pola[zolw.pole].tortoises[x]) * 10);
+            }
             this.pola[zolw.pole].tortoises[x].position.z = this.pola[zolw.pole + karta.typ.znak].position.z;
         }
         console.log(transport);
@@ -381,7 +351,8 @@ class Game extends THREE.Mesh {
             }
         })
     }
-    WyborKoloruKarty = async (obj) => { // dodac kolorowa clicked i uniemozliwic dodac kolorowa clicked i uniemozliwic klikanie innych kart
+    WyborKoloruKarty = async (obj) => {//naprawic wybor kolorow, gdy jest wiecej kart, zrobic wygrana oraz zrobic tasowanie kart gdy sie skoncza na stosie
+        console.log(this.karta.typ);
         this.karta.typ.kolor = obj.kolor;
         for (let x = 0; x < this.wszystkieWybory.length; x++) {
             this.scene.remove(this.wszystkieWybory[x]);
@@ -394,7 +365,71 @@ class Game extends THREE.Mesh {
             this.karta.typ.znak = 1;
             this.karta.typ.onlyOne = true;
         }
-        console.log(this.karta);
+        this.kolorkiClicked = false;
         await this.RzutKarty(this.karta);
+        console.log(this.kartyAkcji);
+    }
+    zrzucenieZolwiow = (zolwie, zolwWyrzucony) => {
+        for (let x = zolwWyrzucony; x < zolwie.length; x++) {
+            zolwie[x].position.y -= 10;
+        }
+    }
+    GeneracjaKart = () => {
+        for (let x = 0; x < this.teksturyKart.length; x++) {
+            let obj = {};
+            if (this.teksturyKart[x].search(/.*Niebieski.*/) != -1) {
+                obj.kolor = "niebieski";
+            }
+            else if (this.teksturyKart[x].search(/.*Czerwony.*/) != -1) {
+                obj.kolor = "czerwony";
+            }
+            else if (this.teksturyKart[x].search(/.*Fioletowy.*/) != -1) {
+                obj.kolor = "fioletowy";
+            }
+            else if (this.teksturyKart[x].search(/.*Zolty.*/) != -1) {
+                obj.kolor = "zolty";
+            }
+            else if (this.teksturyKart[x].search(/.*Zielony.*/) != -1) {
+                obj.kolor = "zielony";
+            }
+            else {
+                obj.kolor = "kolorowy";
+            }
+            if (this.teksturyKart[x].search(/.*PlusPlus.*/) != -1) {
+                for (let y = 0; y < this.ilosciKart.plusplus; y++) {
+                    obj.znak = 2;
+                    obj.sciezka = this.teksturyKart[x];
+                    this.kartyInfo.push(obj);
+                }
+            }
+            else if (this.teksturyKart[x].search(/.*Plus.*/) != -1) {
+                for (let y = 0; y < this.ilosciKart.plus; y++) {
+                    obj.znak = 1;
+                    obj.sciezka = this.teksturyKart[x];
+                    this.kartyInfo.push(obj);
+                }
+            }
+            else if (this.teksturyKart[x].search(/.*Minus.*/) != -1) {
+                for (let y = 0; y < this.ilosciKart.minus; y++) {
+                    obj.znak = -1;
+                    obj.sciezka = this.teksturyKart[x];
+                    this.kartyInfo.push(obj);
+                }
+            }
+            else if (this.teksturyKart[x].search(/.*StaryStary.*/) != -1) {
+                for (let y = 0; y < this.ilosciKart.starystary; y++) {
+                    obj.znak = "starystary";
+                    obj.sciezka = this.teksturyKart[x];
+                    this.kartyInfo.push(obj);
+                }
+            }
+            else if (this.teksturyKart[x].search(/.*Stary.*/) != -1) {
+                for (let y = 0; y < this.ilosciKart.stary; y++) {
+                    obj.znak = "stary";
+                    obj.sciezka = this.teksturyKart[x];
+                    this.kartyInfo.push(obj);
+                }
+            }
+        }
     }
 }

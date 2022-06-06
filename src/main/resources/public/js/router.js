@@ -1,6 +1,7 @@
 class Router {
     constructor() {
         this.user = [];
+        this.users = [{ login: "aaa" }, { login: "bbb" }, { login: "ccc" }];
     }
     login = async () => {
         let login = document.getElementById("login").value;
@@ -37,6 +38,27 @@ class Router {
                     game.createElements();
                     resolve(await response.json());
                 }
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
+    getLudzie = async () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const options = {
+                    method: "GET",
+                };
+
+                let response = await fetch("/user/get", options)
+
+                resolve(this.users);
+                // if (!response.ok)
+                //     resolve(response.status)
+                // else {
+                //     resolve(await response.json());
+                // }
             }
             catch (err) {
                 reject(err);
