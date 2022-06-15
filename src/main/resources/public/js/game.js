@@ -129,6 +129,9 @@ class Game extends THREE.Mesh {
             this.scene.add(kamien);
             this.pola[x].obj = kamien;
         }
+        for (let i = 0; i < 5; i++) {
+            this.createCabbage(i * 100 - 200, 0, -420);
+        }
         this.potasuj(this.kartyZolw, 10, 1);
     }
     potasuj = (karty, iloscPrzetasowan) => {
@@ -670,6 +673,19 @@ class Game extends THREE.Mesh {
                     // }
                 }
             }
+        }
+    }
+    createCabbage = async (posX, posY, posZ) => {
+        try {
+            const loader = new THREE.GLTFLoader();
+            loader.load('./img/textures/cabbage/scene.gltf', (gltf) => {
+                gltf.scene.scale.set(0.5, 0.5, 0.5);
+                gltf.scene.position.set(posX, posY, posZ);
+                game.scene.add(gltf.scene);
+            });
+        }
+        catch (err) {
+            console.log(err)
         }
     }
 }

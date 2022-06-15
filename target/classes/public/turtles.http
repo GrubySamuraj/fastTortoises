@@ -1,0 +1,49 @@
+
+###
+GET http://localhost:3000/start HTTP/1.1
+
+###
+POST http://localhost:3000/start HTTP/1.1
+
+4
+###
+POST http://localhost:3000/move HTTP/1.1
+
+{   
+  "color": "RED",
+  "action": "-"
+}
+
+###
+GET http://localhost:3000/move HTTP/1.1
+
+###
+POST http://localhost:3000/register HTTP/1.1
+
+{   
+  "nick": "test3",
+  "password": "test"
+}
+
+###
+POST http://localhost:3000/login HTTP/1.1
+
+{   
+  "nick": "test3",
+  "password": "test"
+}
+
+###
+PATCH http://localhost:3000/points HTTP/1.1
+
+{   
+  "nick": "Jakub",
+  "password": ""
+}
+###
+POST http://localhost:3000/points HTTP/1.1
+
+{   
+  "nick": "Jakub",
+  "password": ""
+}
