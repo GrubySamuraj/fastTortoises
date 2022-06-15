@@ -14,7 +14,6 @@ class Rock extends THREE.Mesh {
         const geometry = new THREE.CylinderGeometry(50, 50, 20, 32);
         const cylinder = new THREE.Mesh(geometry, material);
         cylinder.position.set(this.posx, this.posy, this.posz)
-        // game.scene.add(cylinder)
         return cylinder;
     }
 }

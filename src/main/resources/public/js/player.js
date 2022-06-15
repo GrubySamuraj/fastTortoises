@@ -1,9 +1,11 @@
 class Player {
-    constructor(nick, kolor, admin) {
+    constructor(id, nick, kolor, admin) {
+        this.id;
         this.nick = nick;
-        this.perspective = 0;
         this.kolor = kolor;
         this.admin = admin;
+        this.password
         this.cards = [];
+        this.turn;
     }
 }

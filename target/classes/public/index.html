@@ -5,11 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fastTortoises</title>
-    <script src="./js/libs/three.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="./js/libs/tween.umd.js"></script>
+    <script src="./js/libs/OrbitControls.js"></script>
+    <script src="./js/router.js" defer></script>
+    <script src="./js/player.js" defer></script>
+    <script src="./js/ui.js" defer></script>
+    <script src="./js/game.js" defer></script>
+    <script src="./js/mapa.js" defer></script>
+    <script src="./js/zolw.js" defer></script>
+    <script src="./js/card.js" defer></script>
+    <script src="./js/cardSmall.js" defer></script>
+    <script src="./js/wood.js" defer></script>
+    <script src="./js/wybor.js" defer></script>
     <script src="./js/main.js" defer></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
+    <div id="listawyborow">
+        <button class="wybor" id="poczekalnia">Poczekalnia</button>
+        <button class="wybor" id="profil">Profil</button>
+    </div>
+    <div id="menu">
+        <div id="logins">
+            Login:<input type="text" id="login"><br>
+            Haslo:<input type="password" id="password"><br>
+            <button id="loginbtn" onclick="router.login()">Zaloguj</button><br>
+            <a href="#" id="rejestracja">Nie masz konta? Zarejestruj się tutaj!</a>
+        </div>
+    </div>
     <div id="root"></div>
 </body>
 </html>

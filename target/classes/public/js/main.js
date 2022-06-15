@@ -1,8 +1,10 @@
 let game;
-let net;
+let router;
 let ui;
-mainfun = () => {
-    net = new Net();
+function mainfun() {
+    router = new Router();
     game = new Game();
     ui = new Ui();
+    player = new Player();
 }
+mainfun();
