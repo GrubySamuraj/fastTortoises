@@ -1,2 +1,2 @@
 ﻿# fastTortoises
-Ported board game to nodejs and threejs
+Ported board game created with spark and threejs
